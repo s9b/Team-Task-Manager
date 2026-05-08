@@ -24,26 +24,37 @@ export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      dispatch({ type: 'SET_USER', payload: null });
+      return;
+    }
     authApi
       .getMe()
       .then((res) => dispatch({ type: 'SET_USER', payload: res.data }))
-      .catch(() => dispatch({ type: 'SET_USER', payload: null }));
+      .catch(() => {
+        localStorage.removeItem('token');
+        dispatch({ type: 'SET_USER', payload: null });
+      });
   }, []);
 
   async function login(email, password) {
     const res = await authApi.login({ email, password });
-    dispatch({ type: 'SET_USER', payload: res.data });
-    return res.data;
+    localStorage.setItem('token', res.data.token);
+    dispatch({ type: 'SET_USER', payload: res.data.user });
+    return res.data.user;
   }
 
   async function register(name, email, password) {
     const res = await authApi.register({ name, email, password });
-    dispatch({ type: 'SET_USER', payload: res.data });
-    return res.data;
+    localStorage.setItem('token', res.data.token);
+    dispatch({ type: 'SET_USER', payload: res.data.user });
+    return res.data.user;
   }
 
   async function logout() {
     await authApi.logout();
+    localStorage.removeItem('token');
     dispatch({ type: 'LOGOUT' });
   }
 

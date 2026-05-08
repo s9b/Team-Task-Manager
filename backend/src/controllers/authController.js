@@ -3,14 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
-function setCookie(res, userId) {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
-  res.cookie('token', token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+function makeToken(userId) {
+  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
 }
 
 function userSafe(user) {
@@ -37,8 +31,7 @@ async function register(req, res, next) {
       data: { name, email, password: hashed },
     });
 
-    setCookie(res, user.id);
-    return res.status(201).json(userSafe(user));
+    return res.status(201).json({ user: userSafe(user), token: makeToken(user.id) });
   } catch (err) {
     next(err);
   }
@@ -62,15 +55,13 @@ async function login(req, res, next) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    setCookie(res, user.id);
-    return res.status(200).json(userSafe(user));
+    return res.status(200).json({ user: userSafe(user), token: makeToken(user.id) });
   } catch (err) {
     next(err);
   }
 }
 
 function logout(req, res) {
-  res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'none' });
   return res.status(200).json({ message: 'Logged out' });
 }
 

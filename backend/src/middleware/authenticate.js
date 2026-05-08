@@ -3,7 +3,7 @@ const prisma = require('../lib/prisma');
 
 async function authenticate(req, res, next) {
   try {
-    const token = req.cookies.token;
+    const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
       return res.status(401).json({ error: 'Not authenticated' });
     }
