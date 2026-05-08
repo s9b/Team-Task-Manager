@@ -1,0 +1,19 @@
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.badge-todo        { background-color: #e8e8e8; color: #555; }
+.badge-in-progress { background-color: var(--color-secondary); color: var(--color-dark); }
+.badge-done        { background-color: #c8f7c5; color: #1a6b17; }
+
+.badge-low    { background-color: var(--color-accent); color: var(--color-dark); }
+.badge-medium { background-color: var(--color-secondary); color: var(--color-dark); }
+.badge-high   { background-color: #f5b7b1; color: #922b21; }
+
+.badge-admin  { background-color: var(--color-primary); color: #fff; }
+.badge-member { background-color: #e8e8e8; color: #555; }
