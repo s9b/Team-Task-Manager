@@ -7,8 +7,8 @@ function setCookie(res, userId) {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
   res.cookie('token', token, {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
+    sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }
@@ -70,7 +70,7 @@ async function login(req, res, next) {
 }
 
 function logout(req, res) {
-  res.clearCookie('token', { httpOnly: true, sameSite: 'lax' });
+  res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'none' });
   return res.status(200).json({ message: 'Logged out' });
 }
 
