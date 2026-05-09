@@ -1,6 +1,6 @@
 # Team Task Manager
 
-**Live URL:** _add after Railway deployment_
+**Live URL:** https://ideal-achievement-production.up.railway.app
 
 **Demo credentials:** `admin@demo.com` / `password123` · `member@demo.com` / `password123`
 
